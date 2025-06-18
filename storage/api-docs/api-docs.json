@@ -245,6 +245,77 @@
                         "bearerAuth": []
                     }
                 ]
+            },
+            "post": {
+                "tags": [
+                    "Recipes"
+                ],
+                "summary": "Create a new recipe",
+                "operationId": "46448289940e329a644b891be9c66943",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "name",
+                                    "ingredients",
+                                    "description",
+                                    "prep_time",
+                                    "cook_time",
+                                    "difficulty"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "Spaghetti Carbonara"
+                                    },
+                                    "ingredients": {
+                                        "type": "string",
+                                        "example": "Spaghetti, Eggs, Bacon"
+                                    },
+                                    "description": {
+                                        "type": "string",
+                                        "example": "Boil pasta. Fry bacon. Mix with eggs."
+                                    },
+                                    "prep_time": {
+                                        "type": "integer",
+                                        "example": 10
+                                    },
+                                    "cook_time": {
+                                        "type": "integer",
+                                        "example": 20
+                                    },
+                                    "difficulty": {
+                                        "type": "string",
+                                        "enum": [
+                                            "easy",
+                                            "medium",
+                                            "hard"
+                                        ]
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Recipe created successfully"
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    },
+                    "500": {
+                        "description": "Server error"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             }
         },
         "/api/recipes/{id}": {
@@ -294,6 +365,110 @@
                                 }
                             }
                         }
+                    },
+                    "404": {
+                        "description": "Recipe not found"
+                    },
+                    "500": {
+                        "description": "Server error"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Recipes"
+                ],
+                "summary": "Update an existing recipe",
+                "operationId": "61665c36ed1115a4d53992f26035a8fd",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "Updated Name"
+                                    },
+                                    "ingredients": {
+                                        "type": "string"
+                                    },
+                                    "description": {
+                                        "type": "string"
+                                    },
+                                    "prep_time": {
+                                        "type": "integer"
+                                    },
+                                    "cook_time": {
+                                        "type": "integer"
+                                    },
+                                    "difficulty": {
+                                        "type": "string",
+                                        "enum": [
+                                            "easy",
+                                            "medium",
+                                            "hard"
+                                        ]
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Recipe updated successfully"
+                    },
+                    "404": {
+                        "description": "Recipe not found"
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    },
+                    "500": {
+                        "description": "Server error"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Recipes"
+                ],
+                "summary": "Delete a recipe",
+                "operationId": "ff2f374ba56017e8d111c4e218868b9a",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Recipe deleted successfully"
                     },
                     "404": {
                         "description": "Recipe not found"
@@ -380,6 +555,70 @@
                     },
                     "422": {
                         "description": "Validation error"
+                    },
+                    "500": {
+                        "description": "Server error"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/recipes/difficulty/{level}": {
+            "get": {
+                "tags": [
+                    "Recipes"
+                ],
+                "summary": "Filter recipes by difficulty",
+                "operationId": "787d9ea952676dcd086d6c5844ad0393",
+                "parameters": [
+                    {
+                        "name": "level",
+                        "in": "path",
+                        "description": "Difficulty level (easy, medium, hard)",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "easy",
+                                "medium",
+                                "hard"
+                            ]
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Filtered recipes",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Recipes fetched successfully."
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/Recipe"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Invalid difficulty level"
                     },
                     "500": {
                         "description": "Server error"

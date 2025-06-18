@@ -3,8 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Models\Recipe;
-use Illuminate\Http\Request;
 use App\Http\Resources\RecipeResource;
+
+use App\Http\Requests\StoreRecipeRequest;
+use App\Http\Requests\UpdateRecipeRequest;
+
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 /**
@@ -84,11 +89,9 @@ class RecipeController extends Controller
      *     )
      * )
      */
-
     public function index()
     {
         try {
-
             $recipes = Recipe::all();
             return response()->json([
                 'status' => true,
@@ -249,6 +252,199 @@ class RecipeController extends Controller
             return response()->json([
                 'status' => false,
                 'message' => 'Failed to search recipes.',
+            ], 500);
+        }
+    }
+
+    /**
+     * @OA\Get(
+     *     path="/api/recipes/difficulty/{level}",
+     *     summary="Filter recipes by difficulty",
+     *     tags={"Recipes"},
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Parameter(
+     *         name="level",
+     *         in="path",
+     *         required=true,
+     *         description="Difficulty level (easy, medium, hard)",
+     *         @OA\Schema(type="string", enum={"easy", "medium", "hard"})
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Filtered recipes",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="boolean", example=true),
+     *             @OA\Property(property="message", type="string", example="Recipes fetched successfully."),
+     *             @OA\Property(property="data", type="array", @OA\Items(ref="#/components/schemas/Recipe"))
+     *         )
+     *     ),
+     *     @OA\Response(response=422, description="Invalid difficulty level"),
+     *     @OA\Response(response=500, description="Server error")
+     * )
+     */
+    public function filterByDifficulty($level)
+    {
+        try {
+            if (!in_array($level, ['easy', 'medium', 'hard'])) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Invalid difficulty level.'
+                ], 422);
+            }
+
+            $recipes = Recipe::where('difficulty', $level)->get();
+
+            return response()->json([
+                'status' => true,
+                'message' => 'Recipes fetched successfully.',
+                'data' => RecipeResource::collection($recipes)
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Failed to fetch recipes.'
+            ], 500);
+        }
+    }
+
+
+    /**
+     * @OA\Post(
+     *     path="/api/recipes",
+     *     summary="Create a new recipe",
+     *     tags={"Recipes"},
+     *     security={{"bearerAuth":{}}},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"name", "ingredients", "description", "prep_time", "cook_time", "difficulty"},
+     *             @OA\Property(property="name", type="string", example="Spaghetti Carbonara"),
+     *             @OA\Property(property="ingredients", type="string", example="Spaghetti, Eggs, Bacon"),
+     *             @OA\Property(property="description", type="string", example="Boil pasta. Fry bacon. Mix with eggs."),
+     *             @OA\Property(property="prep_time", type="integer", example=10),
+     *             @OA\Property(property="cook_time", type="integer", example=20),
+     *             @OA\Property(property="difficulty", type="string", enum={"easy", "medium", "hard"})
+     *         )
+     *     ),
+     *     @OA\Response(response=201, description="Recipe created successfully"),
+     *     @OA\Response(response=422, description="Validation error"),
+     *     @OA\Response(response=500, description="Server error")
+     * )
+     */
+    public function store(StoreRecipeRequest $request)
+    {
+        try {
+            $recipe = Recipe::create($request->validated());
+
+            return response()->json([
+                'status' => true,
+                'message' => 'Recipe created successfully.',
+                'data' => new RecipeResource($recipe)
+            ], 201);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => false,
+                'error' => $e->getMessage(),
+                'message' => 'Failed to create recipe.'
+            ], 500);
+        }
+    }
+
+
+    /**
+     * @OA\Put(
+     *     path="/api/recipes/{id}",
+     *     summary="Update an existing recipe",
+     *     tags={"Recipes"},
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\RequestBody(
+     *         @OA\JsonContent(
+     *             @OA\Property(property="name", type="string", example="Updated Name"),
+     *             @OA\Property(property="ingredients", type="string"),
+     *             @OA\Property(property="description", type="string"),
+     *             @OA\Property(property="prep_time", type="integer"),
+     *             @OA\Property(property="cook_time", type="integer"),
+     *             @OA\Property(property="difficulty", type="string", enum={"easy", "medium", "hard"})
+     *         )
+     *     ),
+     *     @OA\Response(response=200, description="Recipe updated successfully"),
+     *     @OA\Response(response=404, description="Recipe not found"),
+     *     @OA\Response(response=422, description="Validation error"),
+     *     @OA\Response(response=500, description="Server error")
+     * )
+     */
+    public function update(UpdateRecipeRequest $request, $id)
+    {
+        try {
+            $recipe = Recipe::find($id);
+            if (!$recipe) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Recipe not found.'
+                ], 404);
+            }
+
+            $recipe->update($request->validated());
+
+            return response()->json([
+                'status' => true,
+                'message' => 'Recipe updated successfully.',
+                'data' => new RecipeResource($recipe)
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Failed to update recipe.'
+            ], 500);
+        }
+    }
+
+    /**
+     * @OA\Delete(
+     *     path="/api/recipes/{id}",
+     *     summary="Delete a recipe",
+     *     tags={"Recipes"},
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Response(response=204, description="Recipe deleted successfully"),
+     *     @OA\Response(response=404, description="Recipe not found"),
+     *     @OA\Response(response=500, description="Server error")
+     * )
+     */
+    public function destroy($id)
+    {
+        try {
+            $recipe = Recipe::find($id);
+            if (!$recipe) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Recipe not found.',
+                    'data' => null
+                ], 404);
+            }
+
+            $recipe->delete();
+
+            return response()->json([
+                'status' => true,
+                'message' => 'Recipe deleted successfully.',
+                'data' => null
+            ], 204);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Failed to delete recipe.'
             ], 500);
         }
     }
