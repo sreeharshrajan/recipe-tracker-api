@@ -405,17 +405,29 @@
                     },
                     "name": {
                         "type": "string",
-                        "example": "John Doe"
+                        "example": "Jane Doe"
                     },
                     "email": {
                         "type": "string",
                         "format": "email",
-                        "example": "john@example.com"
+                        "example": "jane@example.com"
                     },
                     "email_verified_at": {
                         "type": "string",
                         "format": "date-time",
-                        "example": "2024-06-01T12:00:00Z"
+                        "example": "2024-06-01T12:34:56Z",
+                        "nullable": true
+                    },
+                    "password": {
+                        "type": "string",
+                        "format": "password",
+                        "writeOnly": true,
+                        "example": "hashed_password_string"
+                    },
+                    "remember_token": {
+                        "type": "string",
+                        "example": "Yx8kP0s7w9bAx01Az",
+                        "nullable": true
                     },
                     "created_at": {
                         "type": "string",
@@ -432,34 +444,42 @@
             },
             "Recipe": {
                 "title": "Recipe",
+                "description": "Recipe model schema",
                 "properties": {
                     "id": {
                         "type": "integer",
                         "example": 1
                     },
-                    "title": {
+                    "name": {
                         "type": "string",
                         "example": "Spaghetti Bolognese"
                     },
                     "ingredients": {
                         "type": "string",
-                        "example": "pasta, beef, tomato"
-                    },
-                    "instructions": {
-                        "type": "string",
-                        "example": "Boil pasta. Cook beef. Mix with sauce."
+                        "example": "pasta, ground beef, tomatoes, onions, garlic, olive oil, salt, pepper"
                     },
                     "prep_time": {
+                        "description": "Preparation time in minutes",
                         "type": "integer",
                         "example": 15
                     },
                     "cook_time": {
+                        "description": "Cooking time in minutes",
                         "type": "integer",
                         "example": 30
                     },
                     "difficulty": {
                         "type": "string",
+                        "enum": [
+                            "easy",
+                            "medium",
+                            "hard"
+                        ],
                         "example": "medium"
+                    },
+                    "description": {
+                        "type": "string",
+                        "example": "A classic Italian pasta dish made with ground beef and tomato sauce."
                     },
                     "created_at": {
                         "type": "string",
@@ -470,6 +490,12 @@
                         "type": "string",
                         "format": "date-time",
                         "example": "2024-06-10T15:00:00Z"
+                    },
+                    "deleted_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": null,
+                        "nullable": true
                     }
                 },
                 "type": "object"
