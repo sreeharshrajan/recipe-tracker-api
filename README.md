@@ -33,7 +33,7 @@ A RESTful API-only Laravel application for managing cooking recipes. Developed a
 ## 📦 Installation
 
 ```bash
-git clone <repo-url>
+git clone https://github.com/sreeharshrajan/recipe-tracker-api.git
 cd recipe-tracker-api
 composer install
 cp .env.example .env
