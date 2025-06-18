@@ -13,7 +13,7 @@ Route::post('/login', [AuthController::class, 'login']);
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/recipes', [RecipeController::class, 'index']);
-    Route::get('/recipes/{id}', [RecipeController::class, 'show']);
-    Route::get('/recipes/difficulty/{level}', [RecipeController::class, 'filterByDifficulty']);
     Route::get('/recipes/search', [RecipeController::class, 'searchByTimeAndIngredients']);
+    Route::get('/recipes/difficulty/{level}', [RecipeController::class, 'filterByDifficulty']);
+    Route::get('/recipes/{id}', [RecipeController::class, 'show']);
 });
