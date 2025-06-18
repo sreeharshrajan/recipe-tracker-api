@@ -1,61 +1,179 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# 🍽️ Symmersive Recipe Tracker API
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+A RESTful API-only Laravel application for managing cooking recipes. Developed as an interview project, this application supports recipe CRUD operations, advanced search by ingredients and cook time, authentication via Laravel Sanctum, and robust documentation with Swagger.
 
-## About Laravel
+## 🚀 Features
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+- Full CRUD for recipes
+- JSON responses with proper HTTP status codes
+- SQLite file-based development database
+- Authentication via Laravel Sanctum
+- Input validation using Form Request classes
+- Swagger documentation (OpenAPI) via L5-Swagger
+- Filter recipes by difficulty
+- Advanced search by ingredients and total cook time
+- Custom Resource classes with calculated `total_time`
+- Unit & feature tests using PHPUnit
+- PSR-12 linting applied via Laravel Pint
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+---
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## 🧠 Tech Stack
 
-## Learning Laravel
+- **Laravel 12**
+- **PHP 8.2+**
+- **SQLite**
+- **Laravel Sanctum**
+- **L5-Swagger** for API docs
+- **PHPUnit** for testing
+- **Laravel Pint** for code linting
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+---
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+## 📦 Installation
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+```bash
+git clone <repo-url>
+cd recipe-tracker-api
+composer install
+cp .env.example .env
+touch database/database.sqlite
+php artisan key:generate
+php artisan migrate --seed
+```
 
-## Laravel Sponsors
+### Make sure `.env` contains:
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+```
+DB_CONNECTION=sqlite
+DB_DATABASE=database/database.sqlite
+```
 
-### Premium Partners
+---
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+## 📖 API Documentation
 
-## Contributing
+Access Swagger UI at:
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+```
+http://127.0.0.1:8000//api/documentation
+```
 
-## Code of Conduct
+---
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+## 🔐 Authentication
 
-## Security Vulnerabilities
+Laravel Sanctum is used for secure API authentication.
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+**Register**
+```
+POST /api/register
+```
 
-## License
+**Login**
+```
+POST /api/login
+```
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+Use the token in headers:
+
+```
+Authorization: Bearer {your_token}
+```
+
+---
+
+## 📚 API Endpoints
+
+| Method | Endpoint | Description | Auth Required |
+|--------|----------|-------------|---------------|
+| GET    | /api/recipes | List all recipes | ✅ |
+| POST   | /api/recipes | Create a new recipe | ✅ |
+| GET    | /api/recipes/{id} | Show a specific recipe | ✅ |
+| PUT    | /api/recipes/{id} | Update a recipe | ✅ |
+| DELETE | /api/recipes/{id} | Delete a recipe | ✅ |
+| GET    | /api/recipes/difficulty/{level} | Filter recipes by difficulty | ✅ |
+| GET    | /api/recipes/search | Search by ingredients + time | ✅ |
+
+### Search Example
+
+```
+GET /api/recipes/search?ingredients=potatoes,onion,cumin&min_time=20&max_time=30
+```
+
+---
+
+## 🧪 Testing
+
+Run all tests using:
+
+```bash
+php artisan test
+```
+
+Tests cover:
+- Recipe CRUD
+- Input validation
+- 404 handling
+- Auth & middleware
+- Search feature
+
+---
+
+## 🌱 Seeder
+
+Seeder uses the provided `recipe.json` file.
+
+Each Recipe has:
+- `name`: string
+- `ingredients`: text (comma-separated)
+- `prep_time`: integer
+- `cook_time`: integer
+- `difficulty`: enum (easy, medium, hard)
+- `description`: string
+
+---
+
+## ✅ Validation Rules
+
+Handled by:
+- `StoreRecipeRequest`
+- `UpdateRecipeRequest`
+
+Validates required fields, type, enum constraints, and format.
+
+---
+
+## 🧩 Laravel API Resource
+
+All API responses are wrapped using `RecipeResource` which also includes:
+
+```php
+'total_time' => $prep_time + $cook_time
+```
+
+---
+
+## 🧹 Code Quality
+
+```bash
+./vendor/bin/pint
+```
+
+Applies PSR-12 coding standards using Laravel Pint.
+
+---
+
+## 📝 License
+
+MIT License
+
+---
+
+## 👤 Author
+
+Sreeharsh Rajan  
+Full Stack Developer (Laravel)
+[LinkedIn](https://linkedin.com/in/sreeharshk) | [GitHub](https://github.com/sreeharshrajan) | [Portfolio](https://sreeharsh.vercel.app/)
+
+---
