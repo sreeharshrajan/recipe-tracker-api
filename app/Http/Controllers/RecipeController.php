@@ -436,11 +436,7 @@ class RecipeController extends Controller
 
             $recipe->delete();
 
-            return response()->json([
-                'status' => true,
-                'message' => 'Recipe deleted successfully.',
-                'data' => null
-            ], 204);
+            return response()->noContent();
         } catch (\Exception $e) {
             return response()->json([
                 'status' => false,
