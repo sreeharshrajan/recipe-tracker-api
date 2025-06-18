@@ -56,7 +56,7 @@ DB_DATABASE=database/database.sqlite
 Access Swagger UI at:
 
 ```
-http://127.0.0.1:8000//api/documentation
+http://127.0.0.1:8000/api/documentation
 ```
 
 ---
