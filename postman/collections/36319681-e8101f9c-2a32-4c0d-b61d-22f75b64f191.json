@@ -1,0 +1,391 @@
+{
+	"info": {
+		"_postman_id": "36319681-e8101f9c-2a32-4c0d-b61d-22f75b64f191",
+		"name": "Recipes REST API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Login",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "c0fc401f-da6f-485d-97cf-f42794ba1aa1",
+						"exec": [
+							"const response = pm.response.json();\r",
+							"pm.collectionVariables.set(\"authToken\", response.data.token);\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "fbac23d4-78c2-43f0-8277-d5a2b3d9fa8d",
+						"exec": [],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"id": "36319681-fb1e87bb-31be-4b4d-b0ad-33175ed19936",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"email\" : \"test@example.com\",\r\n    \"password\" : \"test@123\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8000/api/login",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "User Details",
+			"id": "36319681-8fdb6488-8dbc-49ca-83fc-33d80e0e18cf",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://127.0.0.1:8000/api/user",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"user"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "All Recipes",
+			"id": "36319681-a638e60b-b66f-4c72-92b7-0f88ff8d7738",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://127.0.0.1:8000/api/recipes",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"recipes"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Recipe by Id",
+			"id": "36319681-72adfdb3-609e-4528-af82-194871b2e269",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://127.0.0.1:8000/api/recipes/5",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"recipes",
+						"5"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Search by Ingredients and Time",
+			"id": "36319681-52f82f8e-06cf-4926-9ea1-bfe5ddfa7f12",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://127.0.0.1:8000/api/recipes/search?ingredients[]=potatoes&ingredients[]=onion&min_time=10&max_time=45&ingredients[]=cumin",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"recipes",
+						"search"
+					],
+					"query": [
+						{
+							"key": "ingredients[]",
+							"value": "potatoes"
+						},
+						{
+							"key": "ingredients[]",
+							"value": "onion"
+						},
+						{
+							"key": "min_time",
+							"value": "10"
+						},
+						{
+							"key": "max_time",
+							"value": "45"
+						},
+						{
+							"key": "ingredients[]",
+							"value": "cumin"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Filter By Difficulty",
+			"id": "36319681-20284f02-c8a5-4cbd-92c4-487d1486aa94",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://127.0.0.1:8000/api/recipes/difficulty/medium",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"recipes",
+						"difficulty",
+						"medium"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "New Recipe",
+			"id": "36319681-7e1806c2-4d9e-46b7-be88-4231896cf72f",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"Spaghetti Carbonara\",\r\n    \"ingredients\": \"Spaghetti, Eggs, Bacon\",\r\n    \"description\": \"Boil pasta. Fry bacon. Mix with eggs.\",\r\n    \"prep_time\": 10,\r\n    \"cook_time\": 20,\r\n    \"difficulty\": \"easy\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8000/api/recipes",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"recipes"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update Recipe",
+			"id": "36319681-82719e02-4ae7-4c40-9f23-a7fef0441a0b",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"Spaghetti Carbonara\",\r\n    \"ingredients\": \"Spaghetti, Eggs, Bacon\",\r\n    \"description\": \"Boil pasta. Fry bacon. Mix with eggs.\",\r\n    \"prep_time\": 10,\r\n    \"cook_time\": 20,\r\n    \"difficulty\": \"easy\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8000/api/recipes/56",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"recipes",
+						"56"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Recipe",
+			"id": "36319681-3e8c8ccc-4cd9-408d-9bb6-2e188ea8ab0d",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"Spaghetti Carbonara\",\r\n    \"ingredients\": \"Spaghetti, Eggs, Bacon\",\r\n    \"description\": \"Boil pasta. Fry bacon. Mix with eggs.\",\r\n    \"prep_time\": 10,\r\n    \"cook_time\": 20,\r\n    \"difficulty\": \"easy\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8000/api/recipes/53",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"recipes",
+						"53"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{authToken}}",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "40bac999-db22-4c3a-96f1-75707e24446a",
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "6156c141-2abe-4b30-aa24-de9522052946",
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "authToken",
+			"value": ""
+		}
+	]
+}
